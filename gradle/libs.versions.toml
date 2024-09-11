@@ -1,0 +1,124 @@
+# Copyright (C) 2021 - present Juergen Zimmermann, Hochschule Karlsruhe
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# https://docs.gradle.org/8.4/userguide/platforms.html#sub:central-declaration-of-dependencies
+# https://toml.io   TOML = Tom's Obvious Minimal Language   (Tom Preston-Werner)
+
+# table = Schluessel/Wert-Paare
+[versions]
+#javaVersion = "22"
+javaLanguageVersion = "21"
+javaVersion = "21.0.1"
+javaVersionBuildpacks = "21"
+
+springBoot = "3.2.0"
+#springBoot = "3.2.0-SNAPSHOT"
+springBootPlugin = "3.2.0"
+#springBootPlugin = "3.2.0-SNAPSHOT"
+
+annotations = "24.1.0"
+bouncycastle = "1.77"
+jansi = "2.4.1"
+lombokMapstructBinding = "0.2.0"
+mapstruct = "1.6.0.Beta1"
+springdocOpenapi = "2.2.0"
+
+# -----------------------------------------------------------------------------------------
+# B O M s   u n d   s p e z i f i s c h e   V e r s i o n e n   u e b e r s c h r e i b e n
+# -----------------------------------------------------------------------------------------
+allureBom = "2.24.0"
+#angusMail = "2.0.2"
+#assertj = "3.24.2"
+crac = "1.4.0"
+flyway = "10.1.0"
+#graphqlJava = "21.3"
+graphqlJavaDataloader = "3.2.2"
+#h2 = "2.2.224"
+hibernate = "6.4.0.Final"
+# fuer annotationProcessor
+hibernateJpamodelgen = "6.4.0.Final"
+#hibernateJpamodelgen = "6.3.1.Final"
+#hibernateValidator = "8.0.1.Final"
+hikaricp = "5.1.0"
+jackson = "2.16.0"
+#jakartaPersistence = "3.2.0-M1"
+#jakartaPersistence = "3.1.0"
+junit = "5.10.1"
+#logback = "1.4.11"
+log4j2 = "3.0.0-alpha1"
+# fuer annotationProcessor
+# https://projectlombok.org/download-edge
+#lombok = "edge-SNAPSHOT"
+lombok = "1.18.30"
+#micrometer = "1.12.0"
+#micrometerTracingBridgeBrave = "1.2.0"
+mockito = "5.7.0"
+mockitoInline = "5.2.0"
+mysql = "8.2.0"
+netty = "4.1.101.Final"
+#oracle = "23.3.0.23.09"
+postgres = "42.7.0"
+#reactor = "2023.0.0"
+#slf4j = "2.0.9"
+#snakeyaml = "2.2"
+#spring = "6.1.1"
+#springData = "2023.1.0"
+#springGraphQL = "1.2.4"
+#springHateoas = "2.2.0"
+#springSecurity = "6.2.0"
+#tomcat = "11.0.0-M14"
+#tomcat = "10.1.16"
+zipkinReporter = "2.16.4"
+
+# ----------------------------------------------------------------------------------------
+# T e s t e n
+# ----------------------------------------------------------------------------------------
+junitPlatformSuite = "1.10.1"
+
+# ----------------------------------------------------------------------------------------
+# Q S ,   R e p o r t s ,   D o k u m e n t a t i o n
+# ----------------------------------------------------------------------------------------
+allureJunit = "2.24.0"
+allureCommandline = "2.24.1"
+#asciidoctorj = "3.0.0-alpha.1"
+asciidoctorj = "2.5.10"
+asciidoctorjDiagram = "2.2.13"
+asciidoctorjPdf = "2.3.9"
+aspectjweaver = "1.9.9.1"
+checkstyle = "10.12.5"
+errorprone = "2.23.0"
+jacoco = "0.8.11"
+spotbugs = "4.8.1"
+
+# ----------------------------------------------------------------------------------------
+# P l u g i n s
+# ----------------------------------------------------------------------------------------
+allurePlugin = "2.11.2"
+asciidoctor = "4.0.0-alpha.1"
+benManesVersions = "0.50.0"
+dependencyAnalysis = "1.20.0"
+errorpronePlugin = "3.1.0"
+forbiddenapis = "3.4"
+graalvm = "0.9.28"
+licenseReport = "2.5"
+markelliotVersions = "0.43.0"
+nwillcVPlugin = "3.0.5"
+owaspDependencycheck = "9.0.1"
+snyk = "0.5"
+sonarqube = "4.4.1.3373"
+spotbugsPlugin = "6.0.0-rc.2"
+spotless = "6.22.0"
+sweeney = "4.6.6"
+testLogger = "4.0.0"

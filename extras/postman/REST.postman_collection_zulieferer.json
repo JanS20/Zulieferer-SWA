@@ -1,0 +1,1315 @@
+{
+  "info": {
+    "name": "REST",
+    "description": "REST-Schnittstelle",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Suche mit ID",
+      "item": [
+        {
+          "name": "Vorhandene ID 00000000-0000-0000-0000-000000000001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 200', () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/hal+json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.be.equal('application/hal+json');\r",
+                  "});\r",
+                  "pm.test('ID im Self-Link', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    pm.expect(body._links.self.href).to.be.a('string').that.matches(/\\/rest\\/00000000-0000-0000-0000-000000000001$/u);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/hal+json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000001",
+                  "description": "Zulieferer ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Nicht-vorhandene ID 99999999-9999-9999-9999-999999999999",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 404', () => {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "99999999-9999-9999-9999-999999999999",
+                  "description": "Zulieferer ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Über die REST-Schnittstelle nach Zulieferern anhand der ID suchen.",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Suche mit Suchkriterien",
+      "item": [
+        {
+          "name": "Alle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 200', () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.be.equal('application/json');\r",
+                  "});\r",
+                  "pm.test('ID im Self-Link', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { zulieferern } = body._embedded;\r",
+                  "    pm.expect(zulieferern).to.be.an('array').that.is.not.empty;\r",
+                  "    zulieferern.map(zulieferer => zulieferer._links.self.href)\r",
+                  "        .forEach(href => pm.expect(href).to.be.a('string').that.matches(/\\/rest\\/[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}/u));\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/hal+json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{rest_url}}",
+              "host": [
+                "{{rest_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vorhandener Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 200', () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.be.equal('application/json');\r",
+                  "});\r",
+                  "pm.test('Body: Name \"Bauer_Peter\" und Self-Link vorhanden', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { zulieferern } = body._embedded;\r",
+                  "    pm.expect(zulieferern).to.be.an('array').that.is.not.empty;\r",
+                  "    zulieferern.forEach(zulieferer => {\r",
+                  "        const { name, _links } = zulieferer;\r",
+                  "        pm.expect(name).to.be.equal('Bauer_Peter');\r",
+                  "        pm.expect(_links.self.href).to.be.a('string').that.matches(/\\/rest\\/[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://localhost:8080/?name=Bauer_Peter",
+              "host": [
+                "https://localhost:8080/"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Bauer_Peter"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Nicht-vorhandener Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 404', () => {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://localhost:8080/?name=Zeta",
+              "host": [
+                "https://localhost:8080/"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Zeta"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vorhandene Emailadresse",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 200', () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.be.equal('application/json');\r",
+                  "});\r",
+                  "pm.test('Body: Email und Self-Link vorhanden', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { zulieferern } = body._embedded;\r",
+                  "    pm.expect(zulieferern).to.be.an('array').that.has.a.lengthOf(1);\r",
+                  "    const { email, _links } = zulieferern[0];\r",
+                  "    pm.expect(email).to.be.equal('bauer_peter@acme.cn');\r",
+                  "    pm.expect(_links.self.href).to.be.a('string').that.matches(/\\/rest\\/[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://localhost:8080/?bauer_peter%40acme.cn",
+              "host": [
+                "https://localhost:8080/"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "bauer_peter%40acme.cn"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Nicht-vorhandene Emailadresse",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 404', () => {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://localhost:8080/?email=Nicht%40Vorhanden",
+              "host": [
+                "https://localhost:8080/"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "Nicht%40Vorhanden"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Über die REST-Schnittstelle nach Zulieferern mit Suchkriterien suchen.",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Neuanlegen",
+      "item": [
+        {
+          "name": "Neuer Zulieferer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 201', () => {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "pm.test('Location', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const location = response.headers.get('Location');\r",
+                  "    pm.expect(location).to.match(/\\/rest\\/[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+                  "});\r",
+                  "pm.test('Leerer Body', () => {\r",
+                  "    const body = pm.response.text();\r",
+                  "    pm.expect(body).to.be.a('string').that.is.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Testpost\",\n    \"email\": \"Testpost@test.de\",\n    \"geschaeftsfuehrer\": {\n        \"name\": \"Kerl\",\n        \"email\": \"kerl@acme.cn\",\n        \"gehalt\": \"100000\"\n    },\n    \"lieferungen\": [\n        {\n            \"artikel\": \"Krautsalat\"\n        },\n        {\n            \"artikel\": \"Gurkensalat\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}",
+              "host": [
+                "{{rest_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Neuer Zulieferer mit bereits existierender Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 422', () => {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/problem+json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.be.equal('application/problem+json');\r",
+                  "});\r",
+                  "pm.test('Fehlermeldung im Response Body', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { type, detail } = body;\r",
+                  "    pm.expect(type).to.be.equal('/problem/unprocessable');\r",
+                  "    pm.expect(detail).to.be.a('string').that.includes('Emailadresse');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nachname\": \"Test\",\r\n    \"email\": \"admin@acme.com\",\r\n    \"kategorie\": 1,\r\n    \"hasNewsletter\": true,\r\n    \"geburtsdatum\": \"2022-01-31\",\r\n    \"homepage\": \"https://www.test.de\",\r\n    \"geschlecht\": \"W\",\r\n    \"familienstand\": \"L\",\r\n    \"adresse\": {\r\n        \"plz\": \"12345\",\r\n        \"ort\": \"Testort\"\r\n    },\r\n    \"umsaetze\": [{\r\n        \"betrag\": 0,\r\n        \"waehrung\": \"EUR\"\r\n    }],\r\n    \"interessen\": [\r\n        \"R\",\r\n        \"L\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}",
+              "host": [
+                "{{rest_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Neuer Zulieferer mit ungültigen Daten",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 422', () => {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/problem+json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.be.equal('application/problem+json');\r",
+                  "});\r",
+                  "pm.test('Fehlermeldungen im Response Body', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { type, detail } = body;\r",
+                  "    pm.expect(type).to.be.equal('/problem/unprocessable');\r",
+                  "    const props = ['nachname', 'email', 'kategorie', 'geburtsdatum', 'interessen', 'adresse.plz'];\r",
+                  "    pm.expect(detail).to.be.a('string');\r",
+                  "    props.forEach(prop => pm.expect(detail).to.include(prop));\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nachname\": \"?!$\",\r\n    \"email\": \"email\",\r\n    \"kategorie\": 11,\r\n    \"hasNewsletter\": true,\r\n    \"geburtsdatum\": \"3000-01-31\",\r\n    \"homepage\": \"https://www.test.de\",\r\n    \"geschlecht\": \"W\",\r\n    \"familienstand\": \"L\",\r\n    \"adresse\": {\r\n        \"plz\": \"1234\",\r\n        \"ort\": \"Testort\"\r\n    },\r\n    \"umsaetze\": [{\r\n        \"betrag\": 0,\r\n        \"waehrung\": \"EUR\"\r\n    }],\r\n    \"interessen\": [\r\n        \"R\",\r\n        \"L\",\r\n        \"L\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}",
+              "host": [
+                "{{rest_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Neuer Zulieferer mit fehlerhaften Datentypen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 400', () => {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Test\",\r\n    \"lieferungen\": \"1\",\r\n    \"kategorie\" : 1,\r\n    \"hasNewsletter\": true,\r\n    \"geburtsdatum\": \"123\",\r\n    \"homepage\": \"123!\",\r\n    \"geschlecht\": \"W\",\r\n    \"familienstand\": \"L\",\r\n    \"adresse\": {\r\n        \"plz\": 12345,\r\n        \"ort\": \"Testort\"\r\n    },\r\n    \"umsaetze\": [{\r\n        \"betrag\": 0,\r\n        \"waehrung\": \"Xy\"\r\n    }],\r\n    \"interessen\": [\r\n        \"R\",\r\n        \"L\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}",
+              "host": [
+                "{{rest_url}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Über die REST-Schnittstelle neue Zulieferern anlegen",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{TOKEN}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ändern durch PUT",
+      "item": [
+        {
+          "name": "Zulieferer 30 ändern",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 204', () => {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  "pm.test('Leerer Body', () => {\r",
+                  "    const body = pm.response.text();\r",
+                  "    pm.expect(body).to.be.a('string').that.is.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nachname\": \"Testput\",\r\n    \"email\": \"Theo@Test.de.put\",\r\n    \"kategorie\" : 1,\r\n    \"hasNewsletter\": true,\r\n    \"geburtsdatum\": \"2022-01-31\",\r\n    \"homepage\": \"https://www.test.de\",\r\n    \"geschlecht\": \"W\",\r\n    \"familienstand\": \"L\",\r\n    \"username\": \"alpha3\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000030"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Nicht-vorhandener Zulieferer ändern",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 404', () => {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "pm.test('Leerer Body', () => {\r",
+                  "    const body = pm.response.text();\r",
+                  "    pm.expect(body).to.be.a('string').that.is.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nachname\": \"Testput\",\r\n    \"email\": \"Theo@Test.de.put\",\r\n    \"kategorie\" : 1,\r\n    \"hasNewsletter\": true,\r\n    \"geburtsdatum\": \"2022-01-31\",\r\n    \"homepage\": \"https://www.test.de\",\r\n    \"geschlecht\": \"W\",\r\n    \"familienstand\": \"L\",\r\n    \"username\": \"alpha3\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Zulieferer 30 mit ungültigen Daten ändern",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 422', () => {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/problem+json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.equal('application/problem+json');\r",
+                  "});\r",
+                  "pm.test('Problem Details', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { type, title, status, detail, instance } = body;\r",
+                  "    pm.expect(type).to.be.equal('/problem/unprocessable');\r",
+                  "    pm.expect(title).to.be.equal('Unprocessable Entity');\r",
+                  "    pm.expect(status).to.be.equal(422);\r",
+                  "    const props = ['nachname', 'email', 'kategorie', 'geburtsdatum'];\r",
+                  "    pm.expect(detail).to.be.a('string');\r",
+                  "    props.forEach(prop => pm.expect(detail).to.include(prop));\r",
+                  "    pm.expect(instance).to.match(/rest\\/00000000-0000-0000-0000-000000000030$/u);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nachname\": \"?!%\",\r\n    \"email\": \"email\",\r\n    \"kategorie\" : 11,\r\n    \"hasNewsletter\": true,\r\n    \"geburtsdatum\": \"3000-01-31\",\r\n    \"umsatz\": {\r\n        \"betrag\": 0,\r\n        \"waehrung\": \"EUR\"\r\n    },\r\n    \"homepage\": \"https://www.test.de\",\r\n    \"geschlecht\": \"W\",\r\n    \"familienstand\": \"L\",\r\n    \"username\": \"invalid\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000030"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Zulieferer 30 ändern und Email existiert",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 422', () => {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/problem+json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.equal('application/problem+json');\r",
+                  "});\r",
+                  "pm.test('Problem Details', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { type, title, status, detail, instance } = body;\r",
+                  "    pm.expect(type).to.be.equal('/problem/unprocessable');\r",
+                  "    pm.expect(title).to.be.equal('Unprocessable Entity');\r",
+                  "    pm.expect(status).to.be.equal(422);\r",
+                  "    const props = ['nachname', 'email', 'kategorie', 'geburtsdatum'];\r",
+                  "    pm.expect(detail).to.be.a('string').that.includes('Emailadresse');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"1\"",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nachname\": \"Testput\",\r\n  \"email\": \"admin@acme.com\",\r\n  \"kategorie\" : 1,\r\n  \"hasNewsletter\": true,\r\n  \"geburtsdatum\": \"2022-01-31\",\r\n  \"homepage\": \"https://www.test.de\",\r\n  \"geschlecht\": \"W\",\r\n  \"familienstand\": \"L\",\r\n  \"username\": \"alpha3\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000030"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Über die REST-Schnittstelle vorhandene Zulieferern ändern",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ändern durch PATCH",
+      "item": [
+        {
+          "name": "PATCH für Zulieferer 40",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 204', () => {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  "pm.test('Leerer Body', () => {\r",
+                  "    const body = pm.response.text();\r",
+                  "    pm.expect(body).to.be.a('string').that.is.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true
+            }
+          },
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\r\n    { \"op\": \"replace\", \"path\": \"/nachname\", \"value\": \"Neuernamepatch\" },\r\n    { \"op\": \"replace\", \"path\": \"/email\", \"value\": \"new.email@test.depatch\" },\r\n    { \"op\": \"add\", \"path\": \"/interessen\", \"value\": \"S\" },\r\n    { \"op\": \"remove\", \"path\": \"/interessen\", \"value\": \"L\" }\r\n]"
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000040"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH für Zulieferer 40 mit ungültigen Daten",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 422', () => {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/problem+json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.equal('application/problem+json');;\r",
+                  "});\r",
+                  "pm.test('Problem Details', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { type, title, status, detail, instance } = body;\r",
+                  "    pm.expect(type).to.be.equal('/problem/unprocessable');\r",
+                  "    pm.expect(title).to.be.equal('Unprocessable Entity');\r",
+                  "    pm.expect(status).to.be.equal(422);\r",
+                  "    pm.expect(detail).to.be.a('string');\r",
+                  "    pm.expect(detail).to.include('email:');\r",
+                  "    pm.expect(detail).to.include('nachname:');\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true
+            }
+          },
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\r\n    { \"op\": \"replace\", \"path\": \"/nachname\", \"value\": \"?!\" },\r\n    { \"op\": \"replace\", \"path\": \"/email\", \"value\": \"emailungueltig@\" }\r\n]"
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000040"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH für Zulieferer 40 mit ungültigen Interessen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 422', () => {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "pm.test('Content-Type application/problem+json', () => {\r",
+                  "    const { response } = pm;\r",
+                  "    const contentType = response.headers.get('Content-Type');\r",
+                  "    pm.expect(contentType).to.equal('application/problem+json');\r",
+                  "});\r",
+                  "pm.test('Problem Details', () => {\r",
+                  "    const body = pm.response.json();\r",
+                  "    const { type, title, status, detail, instance } = body;\r",
+                  "    pm.expect(type).to.be.equal('/problem/unprocessable');\r",
+                  "    pm.expect(title).to.be.equal('Unprocessable Entity');\r",
+                  "    pm.expect(status).to.be.equal(422);\r",
+                  "    pm.expect(detail).to.be.a('string').that.includes('Patch-Operation');\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true
+            }
+          },
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\r\n    { \"op\": \"replace\", \"path\": \"/nachname\", \"value\": \"Neuername\" },\r\n    { \"op\": \"replace\", \"path\": \"/email\", \"value\": \"new.email@test.de\" },\r\n    { \"op\": \"add\", \"path\": \"/interessen\", \"value\": \"X\" },\r\n    { \"op\": \"remove\", \"path\": \"/interessen\", \"value\": \"Y\" }\r\n]"
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000040"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Über die REST-Schnittstelle vorhandene Zulieferern ändern",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Löschen",
+      "item": [
+        {
+          "name": "Zulieferer 50 löschen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 204', () => {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  "pm.test('Leerer Body', () => {\r",
+                  "    const body = pm.response.text();\r",
+                  "    pm.expect(body).to.be.a('string').that.is.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "00000000-0000-0000-0000-000000000050"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Nicht-vorhandener Zulieferer löschen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Statuscode 204', () => {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "If-Match",
+                "value": "\"0\"",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rest_url}}/:id",
+              "host": [
+                "{{rest_url}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Über die REST-Schnittstelle vorhandene Zulieferern löschen",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "rest_url",
+      "value": "{{base_url}}/rest",
+      "type": "string"
+    },
+    {
+      "key": "auth_url",
+      "value": "{{base_url}}/auth",
+      "type": "string"
+    }
+  ]
+}

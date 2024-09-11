@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    meta.helm.sh/release-name: zulieferer
+    meta.helm.sh/release-namespace: acme
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  creationTimestamp: "2023-10-22T19:34:56Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: acme-ingress
+  namespace: acme
+  resourceVersion: "147960"
+  uid: 23289e0e-338d-4d4b-b562-e2c9aeff1d02
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: kubernetes.docker.internal
+    http:
+      paths:
+      - backend:
+          service:
+            name: zulieferer
+            port:
+              name: http-svc
+        path: /kunden(/|$)(.*)
+        pathType: Prefix
+  tls:
+  - hosts:
+    - kubernetes.docker.internal
+    secretName: acme-tls
+status:
+  loadBalancer:
+    ingress:
+    - hostname: localhost

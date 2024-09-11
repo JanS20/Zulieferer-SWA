@@ -1,0 +1,603 @@
+{
+	"info": {
+		"name": "GraphQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Query",
+			"item": [
+				{
+					"name": "Vorhandene ID 00000000-0000-0000-0000-000000000001",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Body mit den Properties', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { zulieferer } = body.data;\r",
+									"    const { name, email, kategorie, hasNewsletter, geburtsdatum, homepage, geschlecht, familienstand, interessen, adresse, umsaetze } = zulieferer;\r",
+									"    pm.expect(name).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(email).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(kategorie).to.be.a('number');\r",
+									"    pm.expect(hasNewsletter).to.be.a('boolean');\r",
+									"    pm.expect(geburtsdatum).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(homepage).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(geschlecht).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(familienstand).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(interessen).to.be.an('array').that.is.not.empty;\r",
+									"    interessen.forEach(interesse => pm.expect(interesse).to.be.a('string'));\r",
+									"    pm.expect(adresse).to.be.an('object');\r",
+									"    const { plz, ort } = adresse;\r",
+									"    pm.expect(plz).to.be.a('string').that.matches(/^\\d{5}/u);\r",
+									"    pm.expect(ort).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(umsaetze).to.be.an('array');\r",
+									"    umsaetze.forEach(umsatz => {\r",
+									"        const { betrag, waehrung } = umsatz;\r",
+									"        pm.expect(Number(betrag)).to.be.greaterThan(0);\r",
+									"        pm.expect(waehrung).to.be.a('string').that.has.length(3);\r",
+									"    });\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ($id: ID! = \"00000000-0000-0000-0000-000000000001\", $first: Int! = 2) {\r\n  zulieferer(id: $id) {\r\n    name\r\n    email\r\n    kategorie\r\n    hasNewsletter\r\n    geburtsdatum\r\n    homepage\r\n    geschlecht\r\n    familienstand\r\n    interessen\r\n    adresse {\r\n      plz\r\n      ort\r\n    }\r\n    umsaetze(first: $first) {\r\n        betrag\r\n        waehrung\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\r\n  \"first\": 2\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nicht-vorhandene ID ffffffff-ffff-ffff-ffff-ffffffffffff",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Fehlermeldung im Body', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { data, errors } = body;\r",
+									"    pm.expect(data).to.be.an('object').that.is.empty;\r",
+									"    pm.expect(errors).to.be.an('array').that.has.length(1);\r",
+									"    const { message, extensions } = errors[0];\r",
+									"    pm.expect(message).to.be.a('string').that.includes('ffffffff-ffff-ffff-ffff-ffffffffffff');\r",
+									"    pm.expect(extensions.classification).to.be.equal('NOT_FOUND');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ($id: ID! = \"1\") {\r\n  zulieferer(id: $id) {\r\n    name\r\n  }\r\n}",
+								"variables": "{\r\n  \"id\": \"ffffffff-ffff-ffff-ffff-ffffffffffff\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alle Zulieferer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Body mit den Properties', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { dieZulieferer } = body.data;\r",
+									"    pm.expect(dieZulieferer).to.be.an('array').that.is.not.empty;\r",
+									"    dieZulieferer.forEach(zulieferer => {\r",
+									"        const { id, name, kategorie, hasNewsletter, geburtsdatum, homepage, geschlecht, familienstand, adresse } = zulieferer;\r",
+									"        pm.expect(id).to.be.a('string').that.matches(/^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+									"        pm.expect(name).to.be.a('string').that.is.not.empty;\r",
+									"        pm.expect(kategorie).to.be.a('number').that.is.gte(0);\r",
+									"        pm.expect(hasNewsletter).to.be.a('boolean');\r",
+									"        pm.expect(geburtsdatum).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(homepage).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(geschlecht).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(familienstand).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(adresse).to.be.an('object');\r",
+									"        const { plz, ort } = adresse;\r",
+									"        pm.expect(plz).to.be.a('string').that.matches(/^\\d{5}/u);\r",
+									"        pm.expect(ort).to.be.a('string').that.is.not.empty;;\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\r\n  find {\r\n    id\r\n    name\r\n    kategorie\r\n    hasNewsletter\r\n    geburtsdatum\r\n    homepage\r\n    geschlecht\r\n    familienstand\r\n    interessen\r\n    adresse {\r\n      plz\r\n      ort\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vorhandene Emailadresse admin@acm.com",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Body mit den Properties', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { dieZulieferer } = body.data;\r",
+									"    pm.expect(dieZulieferer).to.be.an('array').that.has.length(1);\r",
+									"    const zulieferer = dieZulieferer[0];\r",
+									"    const { id, name, kategorie, hasNewsletter, geburtsdatum, homepage, geschlecht, familienstand, adresse } = zulieferer;\r",
+									"    pm.expect(id).to.be.a('string').that.matches(/^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+									"    pm.expect(name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(kategorie).to.be.a('number').that.is.gte(0);\r",
+									"    pm.expect(hasNewsletter).to.be.a('boolean');\r",
+									"    pm.expect(geburtsdatum).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(homepage).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(geschlecht).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(familienstand).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(adresse).to.be.an('object');\r",
+									"    const { plz, ort } = adresse;\r",
+									"    pm.expect(plz).to.be.a('string').that.matches(/^\\d{5}/u);\r",
+									"    pm.expect(ort).to.be.a('string').that.is.not.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ($email: String! = \"admin@acme.com\") {\r\n  dieZulieferer(input: {email: $email})  {\r\n    id\r\n    name\r\n    kategorie\r\n    hasNewsletter\r\n    geburtsdatum\r\n    homepage\r\n    geschlecht\r\n    familienstand\r\n    interessen\r\n    adresse {\r\n      plz\r\n      ort\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"email\": \"admin@acme.com\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vorhandene Emailadresse admin@acm.com mit Umsätzen",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Body mit den Properties', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { dieZulieferer } = body.data;\r",
+									"    pm.expect(dieZulieferer).to.be.an('array').that.has.length(1);\r",
+									"    const zulieferer = dieZulieferer[0];\r",
+									"    const { id, name, kategorie, hasNewsletter, geburtsdatum, homepage, geschlecht, familienstand, adresse } = zulieferer;\r",
+									"    pm.expect(id).to.be.a('string').that.matches(/^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+									"    pm.expect(name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(kategorie).to.be.a('number').that.is.gte(0);\r",
+									"    pm.expect(hasNewsletter).to.be.a('boolean');\r",
+									"    pm.expect(geburtsdatum).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(homepage).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(geschlecht).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(familienstand).to.be.a('string').that.is.not.empty;;\r",
+									"    pm.expect(adresse).to.be.an('object');\r",
+									"    const { plz, ort } = adresse;\r",
+									"    pm.expect(plz).to.be.a('string').that.matches(/^\\d{5}/u);\r",
+									"    pm.expect(ort).to.be.a('string').that.is.not.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ($email: String! = \"admin@acme.com\", $first: Int! = 2) {\r\n  dieZulieferer(input: {email: $email})  {\r\n    id\r\n    name\r\n    kategorie\r\n    hasNewsletter\r\n    geburtsdatum\r\n    homepage\r\n    geschlecht\r\n    familienstand\r\n    interessen\r\n    adresse {\r\n      plz\r\n      ort\r\n    }\r\n    umsaetze(first: $first) {\r\n        betrag\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"email\": \"admin@acme.com\",\r\n  \"first\": 2\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nicht-vorhandene Emailadresse",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Fehlermeldung im Body', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { data, errors } = body;\r",
+									"    pm.expect(data).to.be.an('object').that.is.empty;\r",
+									"    pm.expect(errors).to.be.an('array').that.has.length(1);\r",
+									"    const { message, extensions } = errors[0];\r",
+									"    pm.expect(message).to.be.a('string').that.includes('email');\r",
+									"    pm.expect(extensions.classification).to.be.equal('NOT_FOUND');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ($email: String! = \"Nicht.Vorhanden@acme.com\") {\r\n  dieZulieferer(input: {email: $email})  {\r\n    id\r\n  }\r\n}",
+								"variables": "{\r\n  \"email\": \"Nicht.Vorhanden@acme.com\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vorhandener name mit Teilstring",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Body mit den Properties', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { dieZulieferer } = body.data;\r",
+									"    pm.expect(dieZulieferer).to.be.an('array').that.is.not.empty;\r",
+									"    dieZulieferer.forEach(zulieferer => {\r",
+									"        const { id, name, email, kategorie, hasNewsletter, geburtsdatum, homepage, geschlecht, familienstand, adresse } = zulieferer;\r",
+									"        pm.expect(id).to.be.a('string').that.matches(/^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+									"        pm.expect(name).to.be.a('string').that.is.not.empty;\r",
+									"        pm.expect(email).to.be.a('string').that.is.not.empty;\r",
+									"        pm.expect(kategorie).to.be.a('number').that.is.gte(0);\r",
+									"        pm.expect(hasNewsletter).to.be.a('boolean');\r",
+									"        pm.expect(geburtsdatum).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(homepage).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(geschlecht).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(familienstand).to.be.a('string').that.is.not.empty;;\r",
+									"        pm.expect(adresse).to.be.an('object');\r",
+									"        const { plz, ort } = adresse;\r",
+									"        pm.expect(plz).to.be.a('string').that.matches(/^\\d{5}/u);\r",
+									"        pm.expect(ort).to.be.a('string').that.is.not.empty;\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ($name: String! = \"a\") {\r\n  dieZulieferer(input: {name: $name})  {\r\n    id\r\n    name\r\n    email\r\n    kategorie\r\n    hasNewsletter\r\n    geburtsdatum\r\n    homepage\r\n    geschlecht\r\n    familienstand\r\n    interessen\r\n    adresse {\r\n      plz\r\n      ort\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"name \": \"a\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nicht-vorhandener name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Fehlermeldung im Body', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { data, errors } = body;\r",
+									"    pm.expect(data).to.be.an('object').that.is.empty;\r",
+									"    pm.expect(errors).to.be.an('array').that.has.length(1);\r",
+									"    const { message, extensions } = errors[0];\r",
+									"    pm.expect(message).to.be.a('string').that.includes('name');\r",
+									"    pm.expect(extensions.classification).to.be.equal('NOT_FOUND');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ($name: String! = \"Nicht.Vorhanden@acme.com\") {\r\n  dieZulieferer(input: {name: $name})  {\r\n    id\r\n  }\r\n}",
+								"variables": "{\r\n  \"name\": \"Nichtvorhanden\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Mutation",
+			"item": [
+				{
+					"name": "Neuer Zulieferer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Body mit der id', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    pm.expect(body.data.create.id).to.match(/^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/u);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  create(\r\n    input: {\r\n      name: \"Neuername-Graphql\"\r\n      email: \"neue.email.graphql@test.de\"\r\n      kategorie: 1\r\n      hasNewsletter: true\r\n      geburtsdatum: \"2022-01-31\"\r\n      homepage: \"https://test.de\"\r\n      geschlecht: WEIBLICH\r\n      familienstand: LEDIG\r\n      adresse: {\r\n        plz: \"11111\"\r\n        ort: \"Testort\"\r\n      }\r\n      umsaetze: [{\r\n        betrag: \"1\"\r\n        waehrung: \"EUR\"\r\n      }]\r\n      interessen: [SPORT, REISEN]\r\n    }\r\n  ) {\r\n    id\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Neuer Zulieferer mit ungültigen Daten",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Statuscode 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('Content-Type application/json', () => {\r",
+									"    const { response } = pm;\r",
+									"    const contentType = response.headers.get('Content-Type');\r",
+									"    pm.expect(contentType).to.be.equal('application/json');\r",
+									"});\r",
+									"pm.test('Body mit der id', () => {\r",
+									"    const body = pm.response.json();\r",
+									"    const { data, errors } = body;\r",
+									"    pm.expect(data).to.be.an('object').that.is.empty;\r",
+									"    pm.expect(errors).to.be.an('array').that.has.length(4);\r",
+									"    errors.forEach(error => {\r",
+									"        const { path, extensions } = error;\r",
+									"        pm.expect(path).to.be.an('array').that.is.not.empty;\r",
+									"        pm.expect(path[0]).to.be.equal('input');\r",
+									"        pm.expect(extensions.classification).to.be.equal('BAD_REQUEST');\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  create(\r\n    input: {\r\n      name: \"?!:\"\r\n      email: \"email\"\r\n      kategorie: 11\r\n      hasNewsletter: true\r\n      geburtsdatum: \"2022-01-31\"\r\n      homepage: \"https://acme.com\"\r\n      geschlecht: WEIBLICH\r\n      familienstand: LEDIG\r\n      adresse: {\r\n        plz: \"1\"\r\n        ort: \"Testort\"\r\n      }\r\n      umsaetze: [{\r\n        betrag: \"1\"\r\n        waehrung: \"EUR\"\r\n      }]\r\n      interessen: [SPORT, REISEN]\r\n    }\r\n  ) {\r\n    id\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{graphql_url}}",
+							"host": [
+								"{{graphql_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "graphql_url",
+			"value": "{{base_url}}/graphql",
+			"type": "string"
+		}
+	]
+}

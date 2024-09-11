@@ -1,0 +1,85 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+"Suche nach Zuliefererdaten"
+type Query {
+  "Suche Zuliefererdaten anhand der ID"
+  zulieferer(id: ID!): Zulieferer
+  "Suche Zuliefererdaten anhand des Namens oder der Emailadresse"
+  dieZulieferer(input: Suchkriterien): [Zulieferer!]
+}
+
+type Mutation {
+  "Einen neuen Zuliefererdatensatz anlegen"
+  create(input: ZuliefererInput!): CreatePayload
+}
+
+"Eigenschaften eines Zulieferer-Datensatzes mit untergeordneten Eigenschaften"
+type Zulieferer {
+  "ID des Zulieferers"
+  id: ID
+  "Name des Zulieferers"
+  name: String!
+  "Email des Zulieferers"
+  email: String!
+  "Lieferungen des Zulieferers"
+  lieferungen: [Lieferung!]
+  "Geschaeftsfuehrer des Zulieferers"
+  geschaeftsfuehrer: Geschaeftsfuehrer!
+}
+
+"Daten zu einer Lieferung"
+type Lieferung {
+  "Artikel der Lieferung"
+  artikel: String!
+}
+
+"Daten zu einem Geschaeftsfuehrer"
+type Geschaeftsfuehrer {
+  "Name des Geschaeftsfuehrer"
+  name: String!
+  "Email des Geschaeftsfuehrer"
+  email: String!
+  "Gehalt des Geschaeftsfuehrer"
+  gehalt: Int!
+}
+
+"Suchkriterien für die Query 'zulieferer'"
+input Suchkriterien {
+  "Name der gesuchten Zulieferer"
+  name: String
+  "Emailadresse der gesuchten Zulieferer"
+  email: String
+}
+
+"Eingabedaten für einen neuen Zulieferer"
+input ZuliefererInput {
+  "Name des neuen Zulieferers"
+  name: String!
+  "Email des neuen Zulieferers"
+  email: String!
+  "Lieferungen des neuen Zulieferers"
+  lieferungen: [LieferungInput!]
+  "Geschaeftsfuehrer des neuen Zulieferers"
+  geschaeftsfuehrer: GeschaeftsfuehrerInput!
+}
+
+"Lieferungseingabe für neuen Zulieferer"
+input LieferungInput {
+  artikel: String!
+}
+
+"Geschaeftsfuehrereingabe für neuen Zulieferer"
+input GeschaeftsfuehrerInput {
+  name: String!
+  email: String!
+  gehalt: Int!
+}
+
+"Rückgabetyp beim Neuanlegen eines Zulieferers"
+type CreatePayload {
+  "ID des neu angelegten Zulieferers"
+  id: String!
+}
